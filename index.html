@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1"
+    />
+    <style>
+      @font-face {
+        font-family: "NanumBarunGothic";
+        src: url("/fonts/NanumBarunGothic.eot");
+        src: url("/fonts/NanumBarunGothic.eot") format("embedded-opentype"),
+          url("/fonts/NanumBarunGothic.woff") format("woff");
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "NanumBarunGothinc", "sans-serif";
+        line-height: 1.6;
+        -ms-overflow-style: none;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        width: 100%;
+        padding-bottom: 50px;
+        background-color: white;
+      }
+
+      #section15 {
+        margin-bottom: 50px;
+        text-align: center;
+      }
+
+      .section15-container {
+        display: flex;
+        width: 100vw;
+        height: 100%;
+        flex-direction: row;
+      }
+
+      .section15-container .store-list {
+        width: 25vw;
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 30px;
+      }
+
+      .section15-container .store-list img {
+        width: 100%;
+      }
+
+      .section15-container .store-list h3 {
+        font-size: 1.8em;
+        color: #11212e;
+      }
+
+      .store {
+        background: #f8f8f8;
+        border: 1px solid #ddd;
+        padding: 12px;
+        margin-bottom: 8px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      .store strong {
+        color: red;
+      }
+
+      .store h2 {
+        font-size: 1.2em;
+      }
+
+      .store p {
+        font-size: 0.8em;
+      }
+
+      .store:hover {
+        background: #e2e2e2;
+      }
+
+      .section15-container .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .pagination button {
+        padding: 5px 10px;
+        border: none;
+        background-color: rgb(145, 145, 145);
+        color: white;
+        cursor: pointer;
+        margin: 1px 6px;
+      }
+
+      .pagination #prevPage {
+        margin-right: 20px;
+      }
+
+      .pagination #nextPage {
+        margin-left: 20px;
+      }
+
+      #map {
+        width: 75vw;
+        height: calc(100vh - 100px);
+      }
+
+      .info-window {
+        color: black;
+        align-items: center;
+        padding: 15px 10px;
+        font-size: 14px;
+        border-radius: 10px;
+        width: 160px;
+        height: 110px;
+        margin-left: -5px;
+        margin-top: -10px;
+        background-color: white;
+        border: 6px solid #248cfa;
+        text-align: left;
+      }
+
+      .info-window::after {
+        content: "";
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 10px solid #248cfa;
+      }
+
+      .info-window strong {
+        font-size: 1.1em;
+      }
+
+      .info-window strong strong {
+        font-size: 1em;
+        color: red;
+      }
+
+      .info-window a {
+        text-decoration: none;
+        color: black;
+        cursor: pointer;
+      }
+
+      .info-window a:hover {
+        color: #248cfa;
+      }
+    </style>
+  </head>
+  <body>
+    <section id="section15" class="page">
+      <div class="section15-container">
+        <div class="store-list">
+          <div class="logo">
+            <h3>매장 찾기</h3>
+          </div>
+          <div id="store-items"></div>
+          <div class="pagination">
+            <button id="prevPage">이전</button>
+            <span id="currentPage">1</span> / <span id="totalPages"></span>
+            <button id="nextPage">다음</button>
+          </div>
+        </div>
+        <div class="store-map" id="store-map">
+          <div id="map"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Script -->
+    <script
+      type="text/javascript"
+      src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=6f8c3e0da897bea2a828bdaeaf2fd769"
+    ></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var container = document.getElementById("map");
+        var options = {
+          center: new kakao.maps.LatLng(36.5, 127.5),
+          level: 12,
+        };
+        var map = new kakao.maps.Map(container, options);
+
+        var storeListElement = document.getElementById("store-items");
+        var prevPageBtn = document.getElementById("prevPage");
+        var nextPageBtn = document.getElementById("nextPage");
+        var currentPageSpan = document.getElementById("currentPage");
+        var totalPagesSpan = document.getElementById("totalPages");
+
+        var markers = [];
+        var openInfoWindow = null;
+
+        var stores = [
+          {
+            name: "청주 신봉점",
+            lat: 36.655598,
+            lng: 127.469437,
+            address: "충청북도 청주시 흥덕구 신봉동 163",
+            phone: "043-266-8883",
+          },
+          {
+            name: "서울 화곡점",
+            lat: 37.542006,
+            lng: 126.83844,
+            address: "서울 강서구 강서로33길 24 해피빌딩 101호",
+            phone: "02-2603-9916",
+          },
+          {
+            name: "김천 부곡점",
+            lat: 36.124328,
+            lng: 128.091864,
+            address: "경상북도 김천시 부곡동 1395",
+            phone: "054-436-2111",
+          },
+          {
+            name: "충북 대소점",
+            lat: 36.975029,
+            lng: 127.47264,
+            address: "충청북도 음성군 대소면 대물1길 6-4 1층",
+            phone: "0507-1380-5886",
+          },
+          {
+            name: "충북 보령점",
+            lat: 36.349906,
+            lng: 126.607157,
+            address: "충남 보령시 큰오랏3길 51 1층",
+            phone: "041-931-0608",
+          },
+          {
+            name: "청주 사천점",
+            lat: 36.664272,
+            lng: 127.475386,
+            address: "충북 청주시 청원구 율봉로 43",
+            phone: "043-218-8885",
+          },
+          {
+            name: "충북 증평점",
+            lat: 36.776039,
+            lng: 127.567447,
+            address: "충북 증평군 증평읍 초중6길 1",
+            phone: "043-838-8398",
+          },
+          {
+            name: "충북 보은점",
+            lat: 36.486059,
+            lng: 127.721058,
+            address: "충북 보은군 남부로 4515",
+            phone: "043-543-0998",
+          },
+          {
+            name: "세종 보람점",
+            lat: 36.484134,
+            lng: 127.293871,
+            address: "세종 시청대로 219 시드니하트 502호",
+            phone: "044-866-7599",
+          },
+          {
+            name: "순천 삼산점 <strong>(샵인샵)</strong>",
+            lat: 34.971286,
+            lng: 127.485311,
+            address: "전남 순천시 삼산로 17 순천문화예술회관 맟은편",
+            phone: "061-753-9825",
+          },
+          {
+            name: "순천 신대점 <strong>(샵인샵)</strong>",
+            lat: 34.932779,
+            lng: 127.554942,
+            address: "전남 순천시 해룡면 매안로 69",
+            phone: "061-723-9825",
+          },
+          {
+            name: "순천 풍덕점 <strong>(샵인샵)</strong>",
+            lat: 34.940547,
+            lng: 127.505403,
+            address: "전남 순천시 하풍동길 34 1층",
+            phone: "061-741-9825",
+          },
+          {
+            name: "경북 상주점 <strong>(샵인샵)</strong>",
+            lat: 36.405984,
+            lng: 128.160395,
+            address: "경북 상주시 상산로 169",
+            phone: "054-535-1717",
+          },
+          {
+            name: "인천 옥련점",
+            lat: 37.427985,
+            lng: 126.649295,
+            address: "인천 연수구 독배로90번길 70-4 1층",
+            phone: "032-859-7770",
+          },
+          {
+            name: "충북 분평점 <strong>(샵인샵)</strong>",
+            lat: 36.605978,
+            lng: 127.486257,
+            address: "충청북도 청주시 서원구 1순환로 1078 1층",
+            phone: "043-284-6300",
+          },
+          {
+            name: "경기 동두천점",
+            lat: 37.906235,
+            lng: 127.064815,
+            address: "경기도 동두천시 장고갯로 126 1층",
+            phone: "031-858-0048",
+          },
+          {
+            name: "충북 용암점",
+            lat: 36.602839,
+            lng: 127.514497,
+            address: "충북 청주시 상당구 월운로 70 1층",
+            phone: "0507-1475-9885",
+          },
+          {
+            name: "전주 만성점",
+            lat: 35.841665,
+            lng: 127.079,
+            address: "전북 전주시 덕진구 만성동로 64-3 1층",
+            phone: "063-214-7740",
+          },
+        ];
+
+        // 페이지네이션 변수
+        var currentPage = 1;
+        var itemsPerPage = 6;
+        var totalPages = Math.ceil(stores.length / itemsPerPage);
+
+        totalPagesSpan.textContent = totalPages;
+
+        // 🔹 [수정] 페이지가 로드될 때 전체 목록을 비우고 필요한 만큼만 표시
+        storeListElement.innerHTML = "";
+
+        function renderStoreList() {
+          storeListElement.innerHTML = ""; // 기존 리스트 제거
+
+          var start = (currentPage - 1) * itemsPerPage;
+          var end = start + itemsPerPage;
+          var storeSlice = stores.slice(start, end);
+
+          storeSlice.forEach((store, index) => {
+            var storeItem = document.createElement("div");
+            storeItem.className = "store";
+            storeItem.innerHTML = `<h2>${store.name}</h2><p>${store.address}</p>`;
+            storeItem.onclick = function () {
+              moveToMarker(start + index);
+            };
+            storeListElement.appendChild(storeItem);
+          });
+
+          currentPageSpan.textContent = currentPage;
+          prevPageBtn.disabled = currentPage === 1;
+          nextPageBtn.disabled = currentPage === totalPages;
+        }
+
+        prevPageBtn.addEventListener("click", function () {
+          if (currentPage > 1) {
+            currentPage--;
+            renderStoreList();
+          }
+        });
+
+        nextPageBtn.addEventListener("click", function () {
+          if (currentPage < totalPages) {
+            currentPage++;
+            renderStoreList();
+          }
+        });
+
+        stores.forEach((store, index) => {
+          var marker = new kakao.maps.Marker({
+            position: new kakao.maps.LatLng(store.lat, store.lng),
+            map: map,
+          });
+
+          var infowindow = new kakao.maps.InfoWindow({
+            content: `
+          <div class="info-window">
+            <strong>${store.name}</strong><br>
+            <a href="tel:${store.phone}">📞 ${store.phone}</a><br>
+            <a href="https://map.kakao.com/link/to/${store.address},${store.lat},${store.lng}" target="_blank">📍 찾아오는 길</a>
+          </div>
+        `,
+          });
+
+          kakao.maps.event.addListener(marker, "click", function () {
+            if (openInfoWindow) {
+              openInfoWindow.close();
+              if (openInfoWindow === infowindow) {
+                openInfoWindow = null;
+                return;
+              }
+            }
+            infowindow.open(map, marker);
+            openInfoWindow = infowindow;
+          });
+
+          markers.push(marker);
+        });
+
+        function moveToMarker(index) {
+          var selectedStore = stores[index];
+          var moveLatLng = new kakao.maps.LatLng(
+            selectedStore.lat,
+            selectedStore.lng
+          );
+          map.setCenter(moveLatLng);
+          map.setLevel(5);
+
+          if (openInfoWindow) {
+            openInfoWindow.close();
+          }
+
+          infowindow.open(map, marker);
+          openInfoWindow = infowindow;
+        }
+
+        renderStoreList();
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const navLinks = document.querySelectorAll(".nav-links a");
+        const navbarHeight = document.querySelector(".navbar").offsetHeight;
+
+        navLinks.forEach((link) => {
+          link.addEventListener("click", function (event) {
+            event.preventDefault();
+            const targetId = this.getAttribute("href");
+            const targetElement = document.querySelector(targetId);
+
+            if (targetElement) {
+              const targetPosition = targetElement.offsetTop - navbarHeight;
+
+              window.scrollTo({
+                top: targetPosition,
+                behavior: "smooth",
+              });
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
