@@ -8,10 +8,35 @@
     />
     <style>
       @font-face {
-        font-family: "NanumBarunGothic";
-        src: url("/fonts/NanumBarunGothic.eot");
-        src: url("/fonts/NanumBarunGothic.eot") format("embedded-opentype"),
-          url("/fonts/NanumBarunGothic.woff") format("woff");
+        font-family: "SfHambakneun";
+        src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2106@1.1/SF_HambakSnow.woff")
+          format("woff");
+        font-weight: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: "Paperozi";
+        src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-1Thin.woff2")
+          format("woff2");
+        font-weight: 100;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: "Paperozi";
+        src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-3Light.woff2")
+          format("woff2");
+        font-weight: 300;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: "Paperozi";
+        src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-5Medium.woff2")
+          format("woff2");
+        font-weight: 500;
+        font-display: swap;
       }
 
       * {
@@ -21,14 +46,16 @@
       }
 
       body {
-        font-family: "NanumBarunGothinc", "sans-serif";
+        font-family: "Paperozi", "Paperozi";
         line-height: 1.6;
         -ms-overflow-style: none;
         overflow-x: hidden;
         overflow-y: hidden;
         width: 100%;
         height: 100%;
-        background-color: white;
+        background-color: #f5f2ed;
+        color: #362b21;
+        font-weight: 100;
       }
 
       #section15 {
@@ -59,8 +86,9 @@
       }
 
       .section15-container .store-list h3 {
-        font-size: 1.8em;
-        color: #11212e;
+        font-family: "SfHambakneun";
+        font-size: 2em;
+        color: #362b21;
       }
 
       .store {
@@ -79,6 +107,7 @@
 
       .store h2 {
         font-size: 1.2em;
+        font-weight: 300;
       }
 
       .store p {
@@ -86,7 +115,7 @@
       }
 
       .store:hover {
-        background: #e2e2e2;
+        background: #e7e0d5;
       }
 
       .section15-container .pagination {
@@ -98,7 +127,7 @@
       .pagination button {
         padding: 5px 10px;
         border: none;
-        background-color: rgb(145, 145, 145);
+        background-color: #4f4434;
         color: white;
         cursor: pointer;
         margin: 1px 6px;
@@ -114,7 +143,7 @@
 
       #map {
         width: 75vw;
-        height: 100vh
+        height: 100vh;
       }
 
       .info-window {
@@ -128,7 +157,7 @@
         margin-left: -5px;
         margin-top: -10px;
         background-color: white;
-        border: 6px solid #248cfa;
+        border: 6px solid #362b21;
         text-align: left;
       }
 
@@ -142,7 +171,7 @@
         height: 0;
         border-left: 10px solid transparent;
         border-right: 10px solid transparent;
-        border-top: 10px solid #248cfa;
+        border-top: 10px solid #362b21;
       }
 
       .info-window strong {
@@ -161,7 +190,7 @@
       }
 
       .info-window a:hover {
-        color: #248cfa;
+        color: #362b21;
       }
     </style>
   </head>
@@ -214,155 +243,133 @@
             lat: 36.6124297590562,
             lng: 127.470104537429,
             address: "충북 청주시 서원구 원흥로80번길 23-4 1층",
-            phone: "043-291-0204",
           },
-            {
+          {
             name: "전남 고흥점",
             lat: 34.5257274420941,
             lng: 127.141111503228,
             address: "전라남도 고흥군 도양읍 우주항공로 20",
-            phone: "043-266-8883",
           },
           {
             name: "청주 신봉점",
             lat: 36.655598,
             lng: 127.469437,
             address: "충청북도 청주시 흥덕구 신봉동 163",
-            phone: "043-266-8883",
           },
           {
             name: "서울 화곡점",
             lat: 37.542006,
             lng: 126.83844,
             address: "서울 강서구 강서로33길 24 해피빌딩 101호",
-            phone: "02-2603-9916",
           },
           {
             name: "김천 부곡점",
             lat: 36.124328,
             lng: 128.091864,
             address: "경상북도 김천시 부곡동 1395",
-            phone: "054-436-2111",
           },
           {
             name: "충북 대소점",
             lat: 36.975029,
             lng: 127.47264,
             address: "충청북도 음성군 대소면 대물1길 6-4 1층",
-            phone: "0507-1380-5886",
           },
           {
             name: "충북 보령점",
             lat: 36.349906,
             lng: 126.607157,
             address: "충남 보령시 큰오랏3길 51 1층",
-            phone: "041-931-0608",
           },
           {
             name: "청주 사천점",
             lat: 36.664272,
             lng: 127.475386,
             address: "충북 청주시 청원구 율봉로 43",
-            phone: "043-218-8885",
           },
           {
             name: "충북 증평점",
             lat: 36.776039,
             lng: 127.567447,
             address: "충북 증평군 증평읍 초중6길 1",
-            phone: "043-838-8398",
           },
           {
             name: "충북 보은점",
             lat: 36.486059,
             lng: 127.721058,
             address: "충북 보은군 남부로 4515",
-            phone: "043-543-0998",
           },
           {
             name: "세종 보람점",
             lat: 36.484134,
             lng: 127.293871,
             address: "세종 시청대로 219 시드니하트 502호",
-            phone: "044-866-7599",
           },
           {
             name: "순천 삼산점 <strong>(샵인샵)</strong>",
             lat: 34.971286,
             lng: 127.485311,
             address: "전남 순천시 삼산로 17 순천문화예술회관 맟은편",
-            phone: "061-753-9825",
           },
           {
             name: "순천 신대점 <strong>(샵인샵)</strong>",
             lat: 34.932779,
             lng: 127.554942,
             address: "전남 순천시 해룡면 매안로 69",
-            phone: "061-723-9825",
           },
           {
             name: "순천 풍덕점 <strong>(샵인샵)</strong>",
             lat: 34.940547,
             lng: 127.505403,
             address: "전남 순천시 하풍동길 34 1층",
-            phone: "061-741-9825",
           },
           {
             name: "경북 상주점 <strong>(샵인샵)</strong>",
             lat: 36.405984,
             lng: 128.160395,
             address: "경북 상주시 상산로 169",
-            phone: "054-535-1717",
           },
           {
             name: "인천 옥련점",
             lat: 37.427985,
             lng: 126.649295,
             address: "인천 연수구 독배로90번길 70-4 1층",
-            phone: "032-859-7770",
           },
           {
             name: "충북 분평점 <strong>(샵인샵)</strong>",
             lat: 36.605978,
             lng: 127.486257,
             address: "충청북도 청주시 서원구 1순환로 1078 1층",
-            phone: "043-284-6300",
           },
           {
             name: "경기 동두천점",
             lat: 37.906235,
             lng: 127.064815,
             address: "경기도 동두천시 장고갯로 126 1층",
-            phone: "031-858-0048",
           },
           {
             name: "충북 용암점",
             lat: 36.602839,
             lng: 127.514497,
             address: "충북 청주시 상당구 월운로 70 1층",
-            phone: "0507-1475-9885",
           },
           {
             name: "전주 만성점",
             lat: 35.841665,
             lng: 127.079,
             address: "전북 전주시 덕진구 만성동로 64-3 1층",
-            phone: "063-214-7740",
           },
         ];
 
-        // 페이지네이션 변수
         var currentPage = 1;
-        var itemsPerPage = 8;
+        var itemsPerPage = 7;
         var totalPages = Math.ceil(stores.length / itemsPerPage);
 
         totalPagesSpan.textContent = totalPages;
 
-        // 🔹 [수정] 페이지가 로드될 때 전체 목록을 비우고 필요한 만큼만 표시
         storeListElement.innerHTML = "";
 
         function renderStoreList() {
-          storeListElement.innerHTML = ""; // 기존 리스트 제거
+          storeListElement.innerHTML = "";
 
           var start = (currentPage - 1) * itemsPerPage;
           var end = start + itemsPerPage;
@@ -398,31 +405,21 @@
         });
 
         stores.forEach((store, index) => {
+          var imageSrc = "./maker.png",
+            imageSize = new kakao.maps.Size(50, 54),
+            imageOption = { offset: new kakao.maps.Point(27, 69) };
+
+          var markerImage = new kakao.maps.MarkerImage(
+              imageSrc,
+              imageSize,
+              imageOption
+            ),
+            markerPosition = new kakao.maps.LatLng(37.54699, 127.09598);
+
           var marker = new kakao.maps.Marker({
             position: new kakao.maps.LatLng(store.lat, store.lng),
             map: map,
-          });
-
-          var infowindow = new kakao.maps.InfoWindow({
-            content: `
-          <div class="info-window">
-            <strong>${store.name}</strong><br>
-            <a href="tel:${store.phone}">📞 ${store.phone}</a><br>
-            <a href="https://map.kakao.com/link/to/${store.address},${store.lat},${store.lng}" target="_blank">📍 찾아오는 길</a>
-          </div>
-        `,
-          });
-
-          kakao.maps.event.addListener(marker, "click", function () {
-            if (openInfoWindow) {
-              openInfoWindow.close();
-              if (openInfoWindow === infowindow) {
-                openInfoWindow = null;
-                return;
-              }
-            }
-            infowindow.open(map, marker);
-            openInfoWindow = infowindow;
+            image: markerImage,
           });
 
           markers.push(marker);
@@ -446,28 +443,6 @@
         }
 
         renderStoreList();
-      });
-
-      document.addEventListener("DOMContentLoaded", function () {
-        const navLinks = document.querySelectorAll(".nav-links a");
-        const navbarHeight = document.querySelector(".navbar").offsetHeight;
-
-        navLinks.forEach((link) => {
-          link.addEventListener("click", function (event) {
-            event.preventDefault();
-            const targetId = this.getAttribute("href");
-            const targetElement = document.querySelector(targetId);
-
-            if (targetElement) {
-              const targetPosition = targetElement.offsetTop - navbarHeight;
-
-              window.scrollTo({
-                top: targetPosition,
-                behavior: "smooth",
-              });
-            }
-          });
-        });
       });
     </script>
   </body>
