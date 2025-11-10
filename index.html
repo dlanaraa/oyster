@@ -235,127 +235,126 @@
         var totalPagesSpan = document.getElementById("totalPages");
 
         var markers = [];
-        var openInfoWindow = null;
 
         var stores = [
           {
             name: "청주 산남법원점",
-            lat: 36.6124297590562,
-            lng: 127.470104537429,
+            lat: 36.6124311,
+            lng: 127.4701135,
             address: "충북 청주시 서원구 원흥로80번길 23-4 1층",
           },
           {
             name: "전남 고흥점",
-            lat: 34.5257274420941,
-            lng: 127.141111503228,
+            lat: 34.525728,
+            lng: 127.1411069,
             address: "전라남도 고흥군 도양읍 우주항공로 20",
           },
           {
             name: "청주 신봉점",
-            lat: 36.655598,
-            lng: 127.469437,
+            lat: 36.6556109,
+            lng: 127.4694101,
             address: "충청북도 청주시 흥덕구 신봉동 163",
           },
           {
             name: "서울 화곡점",
-            lat: 37.542006,
-            lng: 126.83844,
+            lat: 37.5419405,
+            lng: 126.8384832,
             address: "서울 강서구 강서로33길 24 해피빌딩 101호",
           },
           {
             name: "김천 부곡점",
-            lat: 36.124328,
-            lng: 128.091864,
+            lat: 36.1242452,
+            lng: 128.0919405,
             address: "경상북도 김천시 부곡동 1395",
           },
           {
             name: "충북 대소점",
-            lat: 36.975029,
-            lng: 127.47264,
+            lat: 36.9745252,
+            lng: 127.4724223,
             address: "충청북도 음성군 대소면 대물1길 6-4 1층",
           },
           {
             name: "충북 보령점",
-            lat: 36.349906,
-            lng: 126.607157,
+            lat: 36.3497212,
+            lng: 126.6071103,
             address: "충남 보령시 큰오랏3길 51 1층",
           },
           {
             name: "청주 사천점",
-            lat: 36.664272,
-            lng: 127.475386,
+            lat: 36.6641885,
+            lng: 127.4753176,
             address: "충북 청주시 청원구 율봉로 43",
           },
           {
             name: "충북 증평점",
-            lat: 36.776039,
-            lng: 127.567447,
+            lat: 36.7760033,
+            lng: 127.5674438,
             address: "충북 증평군 증평읍 초중6길 1",
           },
           {
             name: "충북 보은점",
-            lat: 36.486059,
-            lng: 127.721058,
+            lat: 36.4858862,
+            lng: 127.720873,
             address: "충북 보은군 남부로 4515",
           },
           {
             name: "세종 보람점",
-            lat: 36.484134,
-            lng: 127.293871,
+            lat: 36.4840179,
+            lng: 127.2938563,
             address: "세종 시청대로 219 시드니하트 502호",
           },
           {
             name: "순천 삼산점 <strong>(샵인샵)</strong>",
-            lat: 34.971286,
-            lng: 127.485311,
+            lat: 34.9712942,
+            lng: 127.4853152,
             address: "전남 순천시 삼산로 17 순천문화예술회관 맟은편",
           },
           {
             name: "순천 신대점 <strong>(샵인샵)</strong>",
-            lat: 34.932779,
-            lng: 127.554942,
+            lat: 34.9327676,
+            lng: 127.5549493,
             address: "전남 순천시 해룡면 매안로 69",
           },
           {
             name: "순천 풍덕점 <strong>(샵인샵)</strong>",
-            lat: 34.940547,
-            lng: 127.505403,
+            lat: 34.9404077,
+            lng: 127.50544,
             address: "전남 순천시 하풍동길 34 1층",
           },
           {
             name: "경북 상주점 <strong>(샵인샵)</strong>",
-            lat: 36.405984,
-            lng: 128.160395,
+            lat: 36.4058737,
+            lng: 128.1604241,
             address: "경북 상주시 상산로 169",
           },
           {
             name: "인천 옥련점",
-            lat: 37.427985,
-            lng: 126.649295,
+            lat: 37.4278038,
+            lng: 126.6493483,
             address: "인천 연수구 독배로90번길 70-4 1층",
           },
           {
             name: "충북 분평점 <strong>(샵인샵)</strong>",
-            lat: 36.605978,
-            lng: 127.486257,
+            lat: 36.606025,
+            lng: 127.4862864,
             address: "충청북도 청주시 서원구 1순환로 1078 1층",
           },
           {
             name: "경기 동두천점",
-            lat: 37.906235,
-            lng: 127.064815,
+            lat: 37.9061045,
+            lng: 127.0648011,
             address: "경기도 동두천시 장고갯로 126 1층",
           },
           {
             name: "충북 용암점",
-            lat: 36.602839,
-            lng: 127.514497,
+            lat: 36.6028118,
+            lng: 127.5144135,
             address: "충북 청주시 상당구 월운로 70 1층",
           },
           {
             name: "전주 만성점",
-            lat: 35.841665,
-            lng: 127.079,
+            lat: 35.8415961,
+            lng: 127.0790317,
             address: "전북 전주시 덕진구 만성동로 64-3 1층",
           },
         ];
@@ -407,14 +406,14 @@
         stores.forEach((store, index) => {
           var imageSrc = "./maker.png",
             imageSize = new kakao.maps.Size(50, 54),
-            imageOption = { offset: new kakao.maps.Point(27, 69) };
+            imageOption = {};
 
           var markerImage = new kakao.maps.MarkerImage(
-              imageSrc,
-              imageSize,
-              imageOption
-            ),
-            markerPosition = new kakao.maps.LatLng(37.54699, 127.09598);
+            imageSrc,
+            imageSize,
+            imageOption
+          );
+          markerPosition = new kakao.maps.LatLng(37.54699, 127.09598);
 
           var marker = new kakao.maps.Marker({
             position: new kakao.maps.LatLng(store.lat, store.lng),
@@ -426,20 +425,13 @@
         });
 
         function moveToMarker(index) {
-          var selectedStore = stores[index];
-          var moveLatLng = new kakao.maps.LatLng(
-            selectedStore.lat,
-            selectedStore.lng
-          );
-          map.setCenter(moveLatLng);
-          map.setLevel(5);
+          const s = stores[index];
+          const ll = new kakao.maps.LatLng(s.lat, s.lng);
 
-          if (openInfoWindow) {
-            openInfoWindow.close();
+          if (map.getLevel() !== 2) {
+            map.setLevel(2, { anchor: ll });
           }
-
-          infowindow.open(map, marker);
-          openInfoWindow = infowindow;
+          map.setCenter(ll);
         }
 
         renderStoreList();
