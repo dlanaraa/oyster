@@ -86,10 +86,10 @@
         opacity: 0.85;
       }
 
+      /* ===== Web ===== */
       .webView {
         display: block;
       }
-
       .mobileView {
         display: none;
       }
@@ -143,23 +143,28 @@
         height: 100vh;
       }
 
+      /* ===== Mobile ===== */
       @media (max-width: 768px) {
         html,
         body {
           height: 100%;
-          overflow: hidden;
+          overflow: hidden; /* iframe에서 부모 스크롤/지도 드래그 충돌 줄이기 */
         }
 
         .webView {
           display: none;
         }
+
+        /* ✅ 모바일 전체를 “헤더 + 지도(유동) + 리스트(고정)”로 구성 */
         .mobileView {
-          display: block;
+          display: flex;
+          flex-direction: column;
           height: 100dvh;
         }
 
         .mHeader {
           height: 45px;
+          flex: 0 0 auto;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -174,8 +179,10 @@
           font-weight: normal;
         }
 
+        /* ✅ 지도는 남는 공간 전부 */
         .mMapWrap {
-          height: 50dvh;
+          flex: 1 1 auto;
+          min-height: 0;
           border-bottom: 1px solid #d8d1c6;
         }
 
@@ -184,8 +191,10 @@
           height: 100%;
         }
 
+        /* ✅ 리스트는 높이 고정 (항상 3개 “페이지” 기준으로 안정화) */
         .mListPanel {
-          height: calc(100dvh - 45px - 50dvh);
+          flex: 0 0 auto;
+          height: 260px; /* 여기만 조절하면 전체 밸런스가 맞음 */
           display: flex;
           flex-direction: column;
           min-height: 0;
@@ -194,8 +203,8 @@
         #mobileStoreListMount {
           flex: 1 1 auto;
           min-height: 0;
-          padding: 12px 16px 8px;
-          overflow: hidden;
+          padding: 12px 16px 6px;
+          overflow: hidden; /* 세로 스크롤 제거 */
         }
 
         .mSlidesTrack {
@@ -223,6 +232,7 @@
           gap: 8px;
         }
 
+        /* 모바일 카드 사이즈 (3개 기준) */
         .storeCard {
           padding: 10px 12px;
           margin-bottom: 0;
@@ -248,7 +258,7 @@
           justify-content: center;
           align-items: center;
           gap: 6px;
-          padding: 8px 0 10px;
+          padding: 6px 0 10px;
         }
 
         .mDot {
@@ -268,6 +278,7 @@
   </head>
 
   <body>
+    <!-- ===== Web ===== -->
     <section class="webView">
       <div class="webLayout">
         <div class="webSidebar">
@@ -290,6 +301,7 @@
       </div>
     </section>
 
+    <!-- ===== Mobile ===== -->
     <section class="mobileView">
       <div class="mHeader">
         <h3>매장 찾기</h3>
@@ -521,20 +533,7 @@
           webNextBtn.disabled = currentPage === totalPages;
         }
 
-        function calcMobileItemsPerPage() {
-          var panel = document.querySelector(".mListPanel");
-          if (!panel) return 3;
-
-          var mountH = mobileMount.getBoundingClientRect().height;
-
-          var approxCardH = 92;
-
-          var n = Math.floor((mountH + 8) / approxCardH);
-          if (n < 3) n = 3;
-          if (n > 4) n = 4;
-          return n;
-        }
-
+        /* ✅ 모바일은 “항상 3개” 고정 */
         function chunkStores(arr, size) {
           var out = [];
           for (var i = 0; i < arr.length; i += size)
@@ -549,7 +548,7 @@
           var track = document.createElement("div");
           track.className = "mSlidesTrack";
 
-          var perPage = calcMobileItemsPerPage();
+          var perPage = 3;
           var pages = chunkStores(stores, perPage);
 
           pages.forEach(function (pageStores, pageIdx) {
@@ -606,12 +605,18 @@
           );
         }
 
+        function relayoutMaps() {
+          // 컨테이너 크기 변화(주소창/회전 등) 대응
+          if (webMap) webMap.relayout();
+          if (mobileMap) mobileMap.relayout();
+        }
+
         var resizeTimer = null;
         window.addEventListener("resize", function () {
-          if (!isMobile()) return;
           clearTimeout(resizeTimer);
           resizeTimer = setTimeout(function () {
-            renderMobileSwipe();
+            relayoutMaps();
+            if (isMobile()) renderMobileSwipe();
           }, 150);
         });
 
@@ -631,6 +636,7 @@
 
         renderWebList();
         renderMobileSwipe();
+        relayoutMaps();
       });
     </script>
   </body>
