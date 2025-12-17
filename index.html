@@ -185,7 +185,7 @@
         }
 
         .mListPanel {
-          height: calc(100dvh - 64px - 50dvh);
+          height: calc(100dvh - 45px - 50dvh);
           display: flex;
           flex-direction: column;
         }
@@ -214,9 +214,14 @@
           margin: 1px 10px;
         }
 
+        #mobileStoreListMount {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-evenly;
+        }
+
         .storeCard {
-          padding: 12px 12px;
-          margin-bottom: 8px;
+          margin-bottom: 0;
         }
 
         .storeCard h2 {
@@ -443,7 +448,7 @@
         webTotal.textContent = totalPages;
 
         var mCurrentPage = 1;
-        var mItemsPerPage = 4;
+        var mItemsPerPage = 3;
         var mTotalPages = Math.ceil(stores.length / mItemsPerPage);
         mTotal.textContent = mTotalPages;
 
