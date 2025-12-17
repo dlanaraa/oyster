@@ -50,29 +50,57 @@
         line-height: 1.6;
         -ms-overflow-style: none;
         overflow-x: hidden;
-        overflow-y: hidden;
-        width: 100%;
-        height: 100%;
         background-color: #f5f2ed;
         color: #362b21;
         font-weight: 100;
+        width: 100%;
+        height: 100%;
       }
 
-      #section15 {
-        margin-bottom: 50px;
+      .storeCard {
+        background: transparent;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 18px 12px;
+        margin-bottom: 12px;
         text-align: center;
+        cursor: pointer;
+        transition: background 0.3s ease;
       }
 
-      .section15-container {
+      .storeCard:hover {
+        background: #e7e0d5;
+      }
+
+      .storeCard strong {
+        color: red;
+      }
+
+      .storeCard h2 {
+        font-size: 1.2em;
+        font-weight: 300;
+      }
+
+      .storeCard p {
+        font-size: 0.95em;
+        opacity: 0.85;
+      }
+
+      .webView {
+        display: block;
+      }
+
+      .mobileView {
+        display: none;
+      }
+
+      .webLayout {
         display: flex;
         width: 100%;
         height: 100vh;
-        max-width: 100%;
-        max-height: 100%;
-        flex-direction: row;
       }
 
-      .section15-container .store-list {
+      .webSidebar {
         width: 25vw;
         padding: 25px;
         display: flex;
@@ -81,160 +109,163 @@
         gap: 30px;
       }
 
-      .section15-container .store-list img {
-        width: 100%;
-      }
-
-      .section15-container .store-list h3 {
+      .webHeader h3 {
         font-family: "SfHambakneun";
         font-size: 2em;
         color: #362b21;
+        text-align: center;
       }
 
-      .store {
-        background: #f8f8f8;
-        border: 1px solid #ddd;
-        padding: 12px;
-        margin-bottom: 8px;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background 0.3s ease;
-      }
-
-      .store strong {
-        color: red;
-      }
-
-      .store h2 {
-        font-size: 1.2em;
-        font-weight: 300;
-      }
-
-      .store p {
-        font-size: 0.8em;
-      }
-
-      .store:hover {
-        background: #e7e0d5;
-      }
-
-      .section15-container .pagination {
+      .webPager {
         display: flex;
         justify-content: center;
         align-items: center;
       }
 
-      .pagination button {
-        padding: 5px 10px;
+      .webPager button {
+        padding: 10px 14px;
         border: none;
         background-color: #4f4434;
         color: white;
         cursor: pointer;
-        margin: 1px 6px;
+        margin: 1px 10px;
       }
 
-      .pagination #prevPage {
+      .webPager #pagerPrev {
         margin-right: 20px;
       }
-
-      .pagination #nextPage {
+      .webPager #pagerNext {
         margin-left: 20px;
       }
 
-      #map {
+      #webMapCanvas {
         width: 75vw;
         height: 100vh;
       }
 
-      .info-window {
-        color: black;
-        align-items: center;
-        padding: 15px 10px;
-        font-size: 14px;
-        border-radius: 10px;
-        width: 160px;
-        height: 110px;
-        margin-left: -5px;
-        margin-top: -10px;
-        background-color: white;
-        border: 6px solid #362b21;
-        text-align: left;
-      }
+      @media (max-width: 768px) {
+        html,
+        body {
+          height: 100%;
+          overflow: hidden;
+        }
 
-      .info-window::after {
-        content: "";
-        position: absolute;
-        bottom: -8px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 0;
-        height: 0;
-        border-left: 10px solid transparent;
-        border-right: 10px solid transparent;
-        border-top: 10px solid #362b21;
-      }
+        .webView {
+          display: none;
+        }
+        .mobileView {
+          display: block;
+          height: 100dvh;
+        }
 
-      .info-window strong {
-        font-size: 1.1em;
-      }
+        .mHeader {
+          height: 64px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-bottom: 1px solid #d8d1c6;
+          background: #f5f2ed;
+        }
 
-      .info-window strong strong {
-        font-size: 1em;
-        color: red;
-      }
+        .mHeader h3 {
+          font-family: "SfHambakneun";
+          font-size: 1.8em;
+          font-weight: normal;
+        }
 
-      .info-window a {
-        text-decoration: none;
-        color: black;
-        cursor: pointer;
-      }
+        .mMapWrap {
+          height: 45dvh;
+          border-bottom: 1px solid #d8d1c6;
+        }
 
-      .info-window a:hover {
-        color: #362b21;
+        #mobileMapCanvas {
+          width: 100%;
+          height: 100%;
+        }
+
+        .mListPanel {
+          height: calc(100dvh - 64px - 45dvh);
+          display: flex;
+          flex-direction: column;
+        }
+
+        #mobileStoreListMount {
+          flex: 1 1 auto;
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+          padding: 14px 16px;
+        }
       }
     </style>
   </head>
+
   <body>
-    <section id="section15" class="page">
-      <div class="section15-container">
-        <div class="store-list">
-          <div class="logo">
+    <section class="webView">
+      <div class="webLayout">
+        <div class="webSidebar">
+          <div class="webHeader">
             <h3>매장 찾기</h3>
           </div>
-          <div id="store-items"></div>
-          <div class="pagination">
-            <button id="prevPage">이전</button>
-            <span id="currentPage">1</span> / <span id="totalPages"></span>
-            <button id="nextPage">다음</button>
+
+          <div id="storeListMount"></div>
+
+          <div class="webPager">
+            <button id="pagerPrev">이전</button>
+            <span id="pagerNow">1</span> / <span id="pagerTotal"></span>
+            <button id="pagerNext">다음</button>
           </div>
         </div>
-        <div class="store-map" id="store-map">
-          <div id="map"></div>
+
+        <div class="webMapWrap">
+          <div id="webMapCanvas"></div>
         </div>
       </div>
     </section>
 
-    <!-- Script -->
+    <section class="mobileView">
+      <div class="mHeader">
+        <h3>매장 찾기</h3>
+      </div>
+
+      <div class="mMapWrap">
+        <div id="mobileMapCanvas"></div>
+      </div>
+
+      <div class="mListPanel">
+        <div id="mobileStoreListMount"></div>
+      </div>
+    </section>
+
     <script
       type="text/javascript"
       src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=6f8c3e0da897bea2a828bdaeaf2fd769"
     ></script>
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        var container = document.getElementById("map");
-        var options = {
-          center: new kakao.maps.LatLng(36.5, 127.5),
-          level: 12,
-        };
-        var map = new kakao.maps.Map(container, options);
+        var webMap = new kakao.maps.Map(
+          document.getElementById("webMapCanvas"),
+          {
+            center: new kakao.maps.LatLng(36.5, 127.5),
+            level: 12,
+          }
+        );
 
-        var storeListElement = document.getElementById("store-items");
-        var prevPageBtn = document.getElementById("prevPage");
-        var nextPageBtn = document.getElementById("nextPage");
-        var currentPageSpan = document.getElementById("currentPage");
-        var totalPagesSpan = document.getElementById("totalPages");
+        var mobileMap = new kakao.maps.Map(
+          document.getElementById("mobileMapCanvas"),
+          {
+            center: new kakao.maps.LatLng(36.5, 127.5),
+            level: 12,
+          }
+        );
 
-        var markers = [];
+        var webStoreListEl = document.getElementById("storeListMount");
+        var webPrevBtn = document.getElementById("pagerPrev");
+        var webNextBtn = document.getElementById("pagerNext");
+        var webNow = document.getElementById("pagerNow");
+        var webTotal = document.getElementById("pagerTotal");
+
+        var mStoreListEl = document.getElementById("mobileStoreListMount");
 
         var stores = [
           {
@@ -360,81 +391,96 @@
         ];
 
         var currentPage = 1;
-        var itemsPerPage = 8;
+        var itemsPerPage = 7;
         var totalPages = Math.ceil(stores.length / itemsPerPage);
+        webTotal.textContent = totalPages;
 
-        totalPagesSpan.textContent = totalPages;
+        function createMarkers(map) {
+          stores.forEach(function (store) {
+            var imageSrc = "./maker.png",
+              imageSize = new kakao.maps.Size(50, 54),
+              imageOption = {};
 
-        storeListElement.innerHTML = "";
+            var markerImage = new kakao.maps.MarkerImage(
+              imageSrc,
+              imageSize,
+              imageOption
+            );
 
-        function renderStoreList() {
-          storeListElement.innerHTML = "";
-
-          var start = (currentPage - 1) * itemsPerPage;
-          var end = start + itemsPerPage;
-          var storeSlice = stores.slice(start, end);
-
-          storeSlice.forEach((store, index) => {
-            var storeItem = document.createElement("div");
-            storeItem.className = "store";
-            storeItem.innerHTML = `<h2>${store.name}</h2><p>${store.address}</p>`;
-            storeItem.onclick = function () {
-              moveToMarker(start + index);
-            };
-            storeListElement.appendChild(storeItem);
+            new kakao.maps.Marker({
+              position: new kakao.maps.LatLng(store.lat, store.lng),
+              map: map,
+              image: markerImage,
+            });
           });
-
-          currentPageSpan.textContent = currentPage;
-          prevPageBtn.disabled = currentPage === 1;
-          nextPageBtn.disabled = currentPage === totalPages;
         }
 
-        prevPageBtn.addEventListener("click", function () {
-          if (currentPage > 1) {
-            currentPage--;
-            renderStoreList();
-          }
-        });
-
-        nextPageBtn.addEventListener("click", function () {
-          if (currentPage < totalPages) {
-            currentPage++;
-            renderStoreList();
-          }
-        });
-
-        stores.forEach((store, index) => {
-          var imageSrc = "./maker.png",
-            imageSize = new kakao.maps.Size(50, 54),
-            imageOption = {};
-
-          var markerImage = new kakao.maps.MarkerImage(
-            imageSrc,
-            imageSize,
-            imageOption
-          );
-          markerPosition = new kakao.maps.LatLng(37.54699, 127.09598);
-
-          var marker = new kakao.maps.Marker({
-            position: new kakao.maps.LatLng(store.lat, store.lng),
-            map: map,
-            image: markerImage,
-          });
-
-          markers.push(marker);
-        });
+        createMarkers(webMap);
+        createMarkers(mobileMap);
 
         function moveToMarker(index) {
           const s = stores[index];
           const ll = new kakao.maps.LatLng(s.lat, s.lng);
 
-          if (map.getLevel() !== 2) {
-            map.setLevel(2, { anchor: ll });
-          }
-          map.setCenter(ll);
+          if (webMap.getLevel() !== 2) webMap.setLevel(2, { anchor: ll });
+          webMap.setCenter(ll);
+
+          if (mobileMap.getLevel() !== 2) mobileMap.setLevel(2, { anchor: ll });
+          mobileMap.setCenter(ll);
         }
 
-        renderStoreList();
+        function renderWebList() {
+          webStoreListEl.innerHTML = "";
+
+          var start = (currentPage - 1) * itemsPerPage;
+          var end = start + itemsPerPage;
+          var slice = stores.slice(start, end);
+
+          slice.forEach(function (store, index) {
+            var item = document.createElement("div");
+            item.className = "storeCard";
+            item.innerHTML = `<h2>${store.name}</h2><p>${store.address}</p>`;
+            item.onclick = function () {
+              moveToMarker(start + index);
+            };
+            webStoreListEl.appendChild(item);
+          });
+
+          webNow.textContent = currentPage;
+          webPrevBtn.disabled = currentPage === 1;
+          webNextBtn.disabled = currentPage === totalPages;
+        }
+
+        function renderMobileListAll() {
+          mStoreListEl.innerHTML = "";
+
+          stores.forEach(function (store, index) {
+            var item = document.createElement("div");
+            item.className = "storeCard";
+            item.innerHTML = `<h2>${store.name}</h2><p>${store.address}</p>`;
+            item.onclick = function () {
+              moveToMarker(index);
+            };
+            mStoreListEl.appendChild(item);
+          });
+        }
+
+        webPrevBtn.addEventListener("click", function () {
+          if (currentPage > 1) {
+            currentPage--;
+            renderWebList();
+          }
+        });
+
+        webNextBtn.addEventListener("click", function () {
+          if (currentPage < totalPages) {
+            currentPage++;
+            renderWebList();
+          }
+        });
+
+        renderWebList();
+        renderMobileListAll();
       });
     </script>
   </body>
