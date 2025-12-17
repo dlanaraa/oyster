@@ -169,13 +169,13 @@
 
         .mHeader h3 {
           font-family: "SfHambakneun";
-          font-size: 1.3em;
+          font-size: 1.2em;
           letter-spacing: -0.02em;
           font-weight: normal;
         }
 
         .mMapWrap {
-          height: 55dvh;
+          height: 50dvh;
           border-bottom: 1px solid #d8d1c6;
         }
 
@@ -185,33 +185,83 @@
         }
 
         .mListPanel {
-          height: calc(100dvh - 45px - 55dvh);
+          height: calc(100dvh - 45px - 50dvh);
           display: flex;
           flex-direction: column;
+          min-height: 0;
         }
 
         #mobileStoreListMount {
           flex: 1 1 auto;
-          overflow-y: auto;
+          min-height: 0;
+          padding: 12px 16px 8px;
+          overflow: hidden;
+        }
+
+        .mSlidesTrack {
+          height: 100%;
+          display: flex;
+          gap: 16px;
+          overflow-x: auto;
+          overflow-y: hidden;
+          scroll-snap-type: x mandatory;
           -webkit-overflow-scrolling: touch;
-          padding: 14px 16px;
+          padding-bottom: 6px;
+        }
+
+        .mSlidesTrack::-webkit-scrollbar {
+          display: none;
+        }
+
+        .mSlide {
+          flex: 0 0 100%;
+          height: 100%;
+          scroll-snap-align: start;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          gap: 8px;
         }
 
         .storeCard {
-          padding: 12px 12px;
-          margin-bottom: 8px;
+          padding: 10px 12px;
+          margin-bottom: 0;
+          border-radius: 12px;
         }
 
         .storeCard h2 {
-          font-size: 1em;
+          font-size: 0.98em;
           font-weight: 300;
           margin-bottom: 4px;
+          line-height: 1.2;
         }
 
         .storeCard p {
-          font-size: 0.5em;
-          line-height: 1.4;
+          font-size: 0.72em;
+          line-height: 1.35;
           opacity: 0.8;
+        }
+
+        .mDots {
+          flex: 0 0 auto;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 6px;
+          padding: 8px 0 10px;
+        }
+
+        .mDot {
+          width: 6px;
+          height: 6px;
+          border-radius: 999px;
+          background: #c9c1b6;
+          opacity: 0.9;
+        }
+
+        .mDot.isActive {
+          background: #4f4434;
+          transform: scale(1.2);
         }
       }
     </style>
@@ -251,6 +301,7 @@
 
       <div class="mListPanel">
         <div id="mobileStoreListMount"></div>
+        <div class="mDots" id="mobileDots"></div>
       </div>
     </section>
 
@@ -283,7 +334,8 @@
         var webNow = document.getElementById("pagerNow");
         var webTotal = document.getElementById("pagerTotal");
 
-        var mStoreListEl = document.getElementById("mobileStoreListMount");
+        var mobileMount = document.getElementById("mobileStoreListMount");
+        var mobileDots = document.getElementById("mobileDots");
 
         var stores = [
           {
@@ -469,19 +521,99 @@
           webNextBtn.disabled = currentPage === totalPages;
         }
 
-        function renderMobileListAll() {
-          mStoreListEl.innerHTML = "";
+        function calcMobileItemsPerPage() {
+          var panel = document.querySelector(".mListPanel");
+          if (!panel) return 3;
 
-          stores.forEach(function (store, index) {
-            var item = document.createElement("div");
-            item.className = "storeCard";
-            item.innerHTML = `<h2>${store.name}</h2><p>${store.address}</p>`;
-            item.onclick = function () {
-              moveToMarker(index);
-            };
-            mStoreListEl.appendChild(item);
-          });
+          var mountH = mobileMount.getBoundingClientRect().height;
+
+          var approxCardH = 92;
+
+          var n = Math.floor((mountH + 8) / approxCardH);
+          if (n < 3) n = 3;
+          if (n > 4) n = 4;
+          return n;
         }
+
+        function chunkStores(arr, size) {
+          var out = [];
+          for (var i = 0; i < arr.length; i += size)
+            out.push(arr.slice(i, i + size));
+          return out;
+        }
+
+        function renderMobileSwipe() {
+          mobileMount.innerHTML = "";
+          mobileDots.innerHTML = "";
+
+          var track = document.createElement("div");
+          track.className = "mSlidesTrack";
+
+          var perPage = calcMobileItemsPerPage();
+          var pages = chunkStores(stores, perPage);
+
+          pages.forEach(function (pageStores, pageIdx) {
+            var slide = document.createElement("div");
+            slide.className = "mSlide";
+
+            pageStores.forEach(function (store, localIdx) {
+              var globalIdx = pageIdx * perPage + localIdx;
+
+              var item = document.createElement("div");
+              item.className = "storeCard";
+              item.innerHTML = `<h2>${store.name}</h2><p>${store.address}</p>`;
+              item.onclick = function () {
+                moveToMarker(globalIdx);
+              };
+              slide.appendChild(item);
+            });
+
+            track.appendChild(slide);
+
+            var dot = document.createElement("div");
+            dot.className = "mDot" + (pageIdx === 0 ? " isActive" : "");
+            dot.dataset.index = String(pageIdx);
+            dot.onclick = function (e) {
+              var idx = parseInt(e.currentTarget.dataset.index, 10) || 0;
+              var x = idx * track.clientWidth;
+              track.scrollTo({ left: x, behavior: "smooth" });
+            };
+            mobileDots.appendChild(dot);
+          });
+
+          mobileMount.appendChild(track);
+
+          function syncDots() {
+            var idx = Math.round(track.scrollLeft / track.clientWidth);
+            var dots = mobileDots.querySelectorAll(".mDot");
+            dots.forEach(function (d, i) {
+              if (i === idx) d.classList.add("isActive");
+              else d.classList.remove("isActive");
+            });
+          }
+
+          track.addEventListener("scroll", function () {
+            window.clearTimeout(track._t);
+            track._t = window.setTimeout(syncDots, 50);
+          });
+
+          syncDots();
+        }
+
+        function isMobile() {
+          return (
+            window.matchMedia && window.matchMedia("(max-width: 768px)").matches
+          );
+        }
+
+        var resizeTimer = null;
+        window.addEventListener("resize", function () {
+          if (!isMobile()) return;
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(function () {
+            renderMobileSwipe();
+          }, 150);
+        });
 
         webPrevBtn.addEventListener("click", function () {
           if (currentPage > 1) {
@@ -498,7 +630,7 @@
         });
 
         renderWebList();
-        renderMobileListAll();
+        renderMobileSwipe();
       });
     </script>
   </body>
