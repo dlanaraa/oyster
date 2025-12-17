@@ -192,36 +192,14 @@
 
         #mobileStoreListMount {
           flex: 1 1 auto;
-          overflow: hidden;
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
           padding: 14px 16px;
         }
 
-        .mPager {
-          flex: 0 0 auto;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          padding: 10px 16px 12px;
-          background: #f5f2ed;
-        }
-
-        .mPager button {
-          padding: 8px 12px;
-          border: none;
-          background-color: #4f4434;
-          color: white;
-          cursor: pointer;
-          margin: 1px 10px;
-        }
-
-        #mobileStoreListMount {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-evenly;
-        }
-
         .storeCard {
-          margin-bottom: 0;
+          padding: 12px 12px;
+          margin-bottom: 8px;
         }
 
         .storeCard h2 {
@@ -273,12 +251,6 @@
 
       <div class="mListPanel">
         <div id="mobileStoreListMount"></div>
-
-        <div class="mPager">
-          <button id="mPagerPrev">이전</button>
-          <span id="mPagerNow">1</span> / <span id="mPagerTotal"></span>
-          <button id="mPagerNext">다음</button>
-        </div>
       </div>
     </section>
 
@@ -305,19 +277,13 @@
           }
         );
 
-        // Web DOM
         var webStoreListEl = document.getElementById("storeListMount");
         var webPrevBtn = document.getElementById("pagerPrev");
         var webNextBtn = document.getElementById("pagerNext");
         var webNow = document.getElementById("pagerNow");
         var webTotal = document.getElementById("pagerTotal");
 
-        // Mobile DOM (pagination)
         var mStoreListEl = document.getElementById("mobileStoreListMount");
-        var mPrevBtn = document.getElementById("mPagerPrev");
-        var mNextBtn = document.getElementById("mPagerNext");
-        var mNow = document.getElementById("mPagerNow");
-        var mTotal = document.getElementById("mPagerTotal");
 
         var stores = [
           {
@@ -447,11 +413,6 @@
         var totalPages = Math.ceil(stores.length / itemsPerPage);
         webTotal.textContent = totalPages;
 
-        var mCurrentPage = 1;
-        var mItemsPerPage = 3;
-        var mTotalPages = Math.ceil(stores.length / mItemsPerPage);
-        mTotal.textContent = mTotalPages;
-
         function createMarkers(map) {
           stores.forEach(function (store) {
             var imageSrc = "./maker.png",
@@ -486,7 +447,6 @@
           mobileMap.setCenter(ll);
         }
 
-        // ===== Web list render =====
         function renderWebList() {
           webStoreListEl.innerHTML = "";
 
@@ -509,26 +469,18 @@
           webNextBtn.disabled = currentPage === totalPages;
         }
 
-        function renderMobileList() {
+        function renderMobileListAll() {
           mStoreListEl.innerHTML = "";
 
-          var start = (mCurrentPage - 1) * mItemsPerPage;
-          var end = start + mItemsPerPage;
-          var slice = stores.slice(start, end);
-
-          slice.forEach(function (store, index) {
+          stores.forEach(function (store, index) {
             var item = document.createElement("div");
             item.className = "storeCard";
             item.innerHTML = `<h2>${store.name}</h2><p>${store.address}</p>`;
             item.onclick = function () {
-              moveToMarker(start + index);
+              moveToMarker(index);
             };
             mStoreListEl.appendChild(item);
           });
-
-          mNow.textContent = mCurrentPage;
-          mPrevBtn.disabled = mCurrentPage === 1;
-          mNextBtn.disabled = mCurrentPage === mTotalPages;
         }
 
         webPrevBtn.addEventListener("click", function () {
@@ -545,22 +497,8 @@
           }
         });
 
-        mPrevBtn.addEventListener("click", function () {
-          if (mCurrentPage > 1) {
-            mCurrentPage--;
-            renderMobileList();
-          }
-        });
-
-        mNextBtn.addEventListener("click", function () {
-          if (mCurrentPage < mTotalPages) {
-            mCurrentPage++;
-            renderMobileList();
-          }
-        });
-
         renderWebList();
-        renderMobileList();
+        renderMobileListAll();
       });
     </script>
   </body>
